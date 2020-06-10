@@ -1,0 +1,19 @@
+li {
+    list-style: none; 
+    display: inline-block;
+    padding: .8rem;
+    margin-left:1rem;
+}
+
+nav li{
+    background-color:#e7a61a;
+    margin-left:1rem;
+    box-shadow: 10px 7px 7px -10px rgba(0,0,0,0.75);
+    cursor: pointer;
+    color:#fff;
+    font-weight: bold;
+}
+
+.content-wrap li {
+    display: block;
+}
