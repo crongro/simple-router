@@ -21,7 +21,7 @@ async function getInitData() {
 async function getStates(path) {
     switch (path) {
         case "/":
-            return Promise.resolve(); 
+            return Promise.resolve({}); 
         case "/content":
             return await getInitData();
         default:
@@ -38,19 +38,26 @@ function render(renderTarget, sHTML) {
 function onLink() {
     document.querySelector("nav ul").addEventListener("click", async (e) => {
         const path  = getCurrentPath(e);
-        const states = await getStates(path);
-        history.pushState(states, '', path)
+        const state = await getStates(path);
+        
+        //push state
+        history.pushState(state, '', path)
+
+        //render page
+        popStateHandler({state});
     })
+}
+
+function popStateHandler({state}) {
+    const renderTargetWrap = document.querySelector(".content-wrap");
+    const targetView = getPath();
+    const contentViewHTML = viewMap[targetView](state?.content);
+    render(renderTargetWrap, contentViewHTML);
 }
 
 // Pop State
 function onRouter() {
-    window.addEventListener("popstate", ({state}) => {
-        const renderTargetWrap = document.querySelector(".content-wrap");
-        const targetView = getPath();
-        const contentViewHTML = viewMap[targetView](state?.content);
-        render(renderTargetWrap, contentViewHTML);
-    });
+    window.addEventListener("popstate", popStateHandler);
 }
 
 // View
@@ -76,4 +83,5 @@ const viewMap = {
 !(function(){
     onLink();
     onRouter()
+    popStateHandler({})
 })();
