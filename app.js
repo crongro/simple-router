@@ -4,11 +4,16 @@ function getPath() {
     return location.pathname;
 }
 
-function getCurrentPath(e) {
-    const {target} = e;
-    const listNode = e.target.closest("li");
-    if(!listNode) return;
-    if(target.nodeName === "A")  e.preventDefault();
+function setInsetStyle(pathName) {
+    const styleName = "button-inset";
+    document.querySelector(`.${styleName}`)?.classList.remove(styleName)
+
+    const node = document.querySelector(`nav li>a[href='${pathName}'`);
+    node.closest("li").classList.toggle(styleName);
+}
+
+function getCurrentPath(e, listNode) {
+    if(e.target.nodeName === "A")  e.preventDefault();
     const path = listNode.querySelector("a").getAttribute("href");
     return path;
 }
@@ -37,22 +42,31 @@ function render(renderTarget, sHTML) {
 // Push State
 function onLink() {
     document.querySelector("nav ul").addEventListener("click", async (e) => {
-        const path  = getCurrentPath(e);
+        const listNode = e.target.closest("li");
+        if(!listNode) return;
+
+        
+        const path  = getCurrentPath(e, listNode);
         const state = await getStates(path);
+        
         
         //push state
         history.pushState(state, '', path)
-
+        
         //render page
         popStateHandler({state});
     })
 }
 
 function popStateHandler({state}) {
+
     const renderTargetWrap = document.querySelector(".content-wrap");
     const targetView = getPath();
+
     const contentViewHTML = viewMap[targetView](state?.content);
     render(renderTargetWrap, contentViewHTML);
+
+    setInsetStyle(targetView);
 }
 
 // Pop State
@@ -76,6 +90,9 @@ const viewMap = {
                 </li>`
             )
         },``);
+    },
+    '/profile'(data) {
+        return (`<h2>코드스쿼드는 SW를 찐하게 배우는 공간입니다</h2>`)
     }
 }
 

@@ -1,8 +1,11 @@
+.content-wrap > *  {
+    margin-left: 1rem;
+}
+
 li {
     list-style: none; 
     display: inline-block;
     padding: .8rem;
-    margin-left:1rem;
 }
 
 nav li{
@@ -16,4 +19,8 @@ nav li{
 
 .content-wrap li {
     display: block;
+}
+
+.button-inset {
+    box-shadow: inset 3px 3px 12px #7e5b10;
 }
